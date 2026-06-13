@@ -1,0 +1,21 @@
+{
+  "name": "joker-telegram-bot",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node joker/index.js",
+    "check": "node --check joker/index.js && node --check joker/agent.js && node --check joker/config.js && node --check joker/jokes.js && node --check joker/redis.js",
+    "docker:prod": "docker compose -f docker-compose.prod.yml up -d --build",
+    "docker:prod:logs": "docker compose -f docker-compose.prod.yml logs -f bot",
+    "docker:prod:down": "docker compose -f docker-compose.prod.yml down"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "ioredis": "^5.4.2",
+    "telegraf": "^4.16.3"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
