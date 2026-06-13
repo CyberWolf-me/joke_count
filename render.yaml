@@ -1,0 +1,28 @@
+services:
+  - type: keyvalue
+    name: joker-redis
+    plan: free
+    ipAllowList: []
+    maxmemoryPolicy: allkeys-lru
+
+  - type: worker
+    name: joker-bot
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: BOT_USERNAME
+        value: joker_huhbot
+      - key: OPENROUTER_MODEL
+        value: openai/gpt-4o-mini
+      - key: REDIS_URL
+        fromService:
+          type: keyvalue
+          name: joker-redis
+          property: connectionString
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false

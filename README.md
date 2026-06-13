@@ -40,7 +40,49 @@ Telegram group bot with two independent features:
 
 The bot uses Telegram **polling**, so it needs one always-on process. Do **not** run `npm start` locally and in the cloud at the same time — Telegram will return a `409 Conflict` error.
 
-### Option A: Railway (easiest, no server to manage)
+### Option A: Render (recommended)
+
+Repo: [github.com/CyberWolf-me/joke_count](https://github.com/CyberWolf-me/joke_count)
+
+1. Stop local `npm start` on your PC (`Ctrl+C`).
+2. Go to [render.com](https://render.com) and sign in with GitHub.
+3. Click **New +** → **Blueprint**.
+4. Connect the **`CyberWolf-me/joke_count`** repo.
+5. Render reads `render.yaml` and creates:
+   - **joker-redis** — Key Value store (Redis)
+   - **joker-bot** — Background Worker (always-on bot)
+6. When prompted, fill in the secret env vars:
+   - `TELEGRAM_BOT_TOKEN`
+   - `OPENROUTER_API_KEY`
+7. Click **Apply** and wait for the deploy to finish.
+8. Open the **joker-bot** service → **Logs**. You should see:
+
+   ```text
+   Joker bot running as @joker_huhbot (id ...)
+   ```
+
+**Manual setup (without Blueprint):**
+
+1. **New +** → **Key Value** → name it `joker-redis` → Create.
+2. **New +** → **Background Worker** → connect GitHub repo.
+3. Set **Language** to **Docker**.
+4. Add env vars:
+
+   ```env
+   TELEGRAM_BOT_TOKEN=
+   OPENROUTER_API_KEY=
+   OPENROUTER_MODEL=openai/gpt-4o-mini
+   BOT_USERNAME=joker_huhbot
+   REDIS_URL=<Internal Redis URL from joker-redis dashboard>
+   ```
+
+5. Deploy.
+
+**Cost:** Background Worker starter plan is about **$7/month**. Key Value free tier is available for small usage.
+
+**Updates:** Push to GitHub `main` → Render auto-redeploys.
+
+### Option B: Railway
 
 1. Push this repo to GitHub (keep `.env` out of git).
 2. Go to [railway.app](https://railway.app) and create a new project.
@@ -67,7 +109,7 @@ Check logs in the Railway dashboard. You should see:
 Joker bot running as @joker_huhbot (id ...)
 ```
 
-### Option B: VPS + Docker (cheapest long-term)
+### Option C: VPS + Docker (cheapest long-term)
 
 Use any small Linux VPS (Hetzner, DigitalOcean, Oracle free tier, etc.) with Docker installed.
 
